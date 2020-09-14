@@ -26,7 +26,7 @@ class DbHelper {
         "Create table categories(id INTEGER PRIMARY KEY, name TEXT, description TEXT)");
 
     await dbb.execute(
-        "Create table todos(id INTEGER PRIMARY KEY, title TEXT, description TEXT, category TEXT, tododate TEXT, isfinished INTEGER)");
+        "Create table todos(id INTEGER PRIMARY KEY, title TEXT, description TEXT, category TEXT, todoDate TEXT, isFinished INTEGER)");
   }
 
   ///normal Listeleme

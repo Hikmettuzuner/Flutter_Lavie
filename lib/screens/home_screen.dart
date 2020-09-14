@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lavie/data/dbHelper.dart';
 import 'package:lavie/models/todo.dart';
 import 'package:lavie/screens/cagetories_screen.dart';
+import 'package:lavie/screens/previewTodo_screen.dart';
 import 'package:lavie/screens/todo_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -64,6 +65,7 @@ class HomeScreenState extends State {
   }
 
   ListView buildProductList() {
+    print(todoList);
     return ListView.builder(
         itemCount: todoCount,
         itemBuilder: (BuildContext context, int position) {
@@ -78,15 +80,17 @@ class HomeScreenState extends State {
               child: ListTile(
                 leading: IconButton(
                   icon: Icon(Icons.edit),
-                  onPressed: () {},
+                  onPressed: () {
+                    goToDetail(this.todoList[position]);
+                  },
                 ),
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                        todoList[position].title == null
-                            ? 'Tarih Bilgisi Bulunmamakta..'
-                            : todoList[position].title.toString(),
+                        todoList[position].todoDate == null
+                            ? todoList[position].todoDate.toString()
+                            : todoList[position].todoDate.toString(),
                         style: TextStyle(color: Colors.white)),
                     IconButton(
                       icon: Icon(
@@ -121,5 +125,15 @@ class HomeScreenState extends State {
         todoCount = data.length;
       });
     });
+  }
+
+  void goToDetail(Todo todoList) async {
+    bool result = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => Previewtodo(todoList)));
+    if (result != null) {
+      if (result) {
+        getProducts();
+      }
+    }
   }
 }

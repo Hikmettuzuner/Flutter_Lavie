@@ -1,46 +1,35 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lavie/data/dbHelper.dart';
 import 'package:lavie/models/todo.dart';
 
-class TodoScreen extends StatefulWidget {
+class Previewtodo extends StatefulWidget {
+  Todo todoList;
+  Previewtodo(this.todoList);
   @override
-  _TodoScreenState createState() => _TodoScreenState();
+  State<StatefulWidget> createState() {
+    return _Previewtodo(todoList);
+  }
 }
 
-class _TodoScreenState extends State<TodoScreen> {
+class _Previewtodo extends State {
   var dbHelper = DbHelper();
-  List<Todo> todoList;
-  int todoCount = 0;
-
-  var _selectedValue;
-  var _categories = List<DropdownMenuItem>();
-
   DateTime _selectedDate;
 
+  Todo todoList;
+  _Previewtodo(this.todoList);
+  final GlobalKey<ScaffoldState> _globalKeyy = GlobalKey<ScaffoldState>();
   var todoBaslikController = TextEditingController();
   var todoAciklamakController = TextEditingController();
-
-  TextEditingController _textEditingController = new TextEditingController();
-
-  final GlobalKey<ScaffoldState> _globalKeyy = GlobalKey<ScaffoldState>();
+  var _textEditingController = TextEditingController();
 
   @override
   void initState() {
+    todoBaslikController.text = todoList.title;
+    todoAciklamakController.text = todoList.description;
+    _textEditingController.text = todoList.todoDate;
     super.initState();
-    _loadCategories();
-  }
-
-  _loadCategories() async {
-    var categories = await dbHelper.readCategories();
-    categories.forEach((category) {
-      setState(() {
-        _categories.add(DropdownMenuItem(
-          child: Text(category['name']),
-          value: category['name'],
-        ));
-      });
-    });
   }
 
   @override
@@ -51,7 +40,7 @@ class _TodoScreenState extends State<TodoScreen> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.deepPurpleAccent),
         centerTitle: true,
-        title: const Text('Proğram Ekle',
+        title: const Text('Proğram Detay',
             style: TextStyle(color: Colors.deepPurpleAccent)),
         backgroundColor: Colors.black,
       ),
@@ -103,7 +92,6 @@ class _TodoScreenState extends State<TodoScreen> {
               title: new TextField(
                 style: TextStyle(color: Colors.black, fontSize: 20),
                 decoration: new InputDecoration(
-                  hintText: "Tarih Seçiniz",
                   filled: true,
                   border: InputBorder.none,
                   enabledBorder: new OutlineInputBorder(
@@ -120,55 +108,24 @@ class _TodoScreenState extends State<TodoScreen> {
             SizedBox(
               height: 20,
             ),
-            new ListTile(
-              leading: const Icon(Icons.category),
-              title: new DropdownButtonFormField(
-                value: _selectedValue,
-                items: _categories,
-                hint: Text('Kategoriler', style: TextStyle(fontSize: 20)),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedValue = value;
-                  });
-                },
-                style: TextStyle(color: Colors.black, fontSize: 20),
-                decoration: new InputDecoration(
-                  filled: true,
-                  border: InputBorder.none,
-                  enabledBorder: new OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(color: Colors.black)),
-                ),
-              ),
-            ),
             const Divider(
               color: Colors.deepPurpleAccent,
               height: 80.0,
             ),
             FlatButton(
-                child: Text('Kaydet',
+                child: Text('Güncelle',
                     style: TextStyle(
                         color: Colors.deepPurpleAccent, fontSize: 18)),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.black),
                 ),
                 color: Colors.black,
-                onPressed: () {
-                  addTodo();
-                })
+                onPressed: () {})
           ],
         ),
       ),
     );
-  }
-
-  _showSuccessSnacbar(message) async {
-    var _snackbar = SnackBar(
-      content: message,
-      duration: Duration(milliseconds: 700),
-      backgroundColor: Colors.deepPurpleAccent,
-    );
-    _globalKeyy.currentState.showSnackBar(_snackbar);
   }
 
   _selectDate(BuildContext context) async {
@@ -202,32 +159,8 @@ class _TodoScreenState extends State<TodoScreen> {
     }
   }
 
-  addTodo() async {
-    if (_textEditingController.text != '' &&
-        todoAciklamakController.text != '' &&
-        todoBaslikController.text != '') {
-      var result = await dbHelper.insertTodo(
-        Todo(
-          title: todoBaslikController.text,
-          description: todoAciklamakController.text,
-          category: _selectedValue.toString(),
-          todoDate: _textEditingController.text,
-          isFinished: 0,
-        ),
-      );
-      if (result > 0) {
-        Navigator.pop(context, true);
-        print(_textEditingController);
-      }
-    } else {
-      _showSuccessSnacbar(
-        Text("Boş Alanları Doldurunuz!"),
-      );
-    }
-  }
+////KOD BITER
 }
-
-/////////KOD BITER
 
 class AlwaysDisabledFocusNode extends FocusNode {
   @override

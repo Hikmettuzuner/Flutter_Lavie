@@ -41,6 +41,6 @@ class Todo {
     this.description = o["description"];
     this.category = o["category"];
     this.todoDate = o["todoDate"];
-    this.isFinished = o["isFinished"];
+    this.isFinished = int.tryParse(o["isFinished"].toString());
   }
 }
